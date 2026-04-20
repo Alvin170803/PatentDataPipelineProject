@@ -1,0 +1,27 @@
+# Raw data files (too large for GitHub)
+data/*.tsv
+data/*.zip
+data/sample/*.tsv
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+venv/
+env/
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# IDE
+.vscode/
+.idea/
+.DS_Store
