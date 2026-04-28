@@ -1,0 +1,71 @@
+{
+  "total_patents": 2217504,
+  "total_inventors": 151930,
+  "total_companies": 26809,
+  "top_inventors": [
+    {
+      "name": "Jonathan P. Ive",
+      "patents": 1062
+    },
+    {
+      "name": "Richard P. Howarth",
+      "patents": 957
+    },
+    {
+      "name": "Bartley K. Andre",
+      "patents": 945
+    },
+    {
+      "name": "Duncan Robert Kerr",
+      "patents": 939
+    },
+    {
+      "name": "Peter Russell-Clarke",
+      "patents": 931
+    }
+  ],
+  "top_companies": [
+    {
+      "name": "NIKE, Inc.",
+      "patents": 2175
+    },
+    {
+      "name": "SAMSUNG DISPLAY CO., LTD.",
+      "patents": 1795
+    },
+    {
+      "name": "Apple Inc.",
+      "patents": 1502
+    },
+    {
+      "name": "LG ELECTRONICS INC.",
+      "patents": 1368
+    },
+    {
+      "name": "FORD GLOBAL TECHNOLOGIES, LLC",
+      "patents": 560
+    }
+  ],
+  "top_countries": [
+    {
+      "country": "US",
+      "patents": 148073
+    },
+    {
+      "country": "CN",
+      "patents": 45689
+    },
+    {
+      "country": "KR",
+      "patents": 11680
+    },
+    {
+      "country": "JP",
+      "patents": 10975
+    },
+    {
+      "country": "DE",
+      "patents": 8071
+    }
+  ]
+}
