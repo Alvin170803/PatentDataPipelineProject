@@ -2,6 +2,7 @@
 data/*.tsv
 data/*.zip
 data/sample/*.tsv
+output/*.csv
 
 # Database files
 *.db
