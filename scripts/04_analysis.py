@@ -104,6 +104,65 @@ print(f"✅ Saved patents_by_year.csv")
 print("\n   Yearly Breakdown:")
 for _, row in yearly_trends.iterrows():
     print(f"   {int(row['year'])}: {int(row['patent_count']):,} patents")
+    
+# ------------------------------------------------------------
+# BONUS Q5: Companies with Most Diverse Inventors
+# ------------------------------------------------------------
+print("\n[Bonus Q5] Companies with Most Unique Inventors...")
+diverse_companies = pd.read_sql_query("""
+    SELECT 
+        c.name,
+        COUNT(DISTINCT pic.inventor_id) as unique_inventors,
+        COUNT(DISTINCT pic.patent_id) as total_patents,
+        ROUND(CAST(COUNT(DISTINCT pic.inventor_id) AS FLOAT) / COUNT(DISTINCT pic.patent_id), 2) as inventors_per_patent
+    FROM patent_inventor_company pic
+    JOIN companies c ON pic.company_id = c.company_id
+    WHERE c.name IS NOT NULL AND c.name != ''
+    GROUP BY c.company_id, c.name
+    HAVING total_patents >= 100
+    ORDER BY unique_inventors DESC
+    LIMIT 10
+""", conn)
+diverse_companies.to_csv(f"{OUTPUT_DIR}/diverse_companies.csv", index=False)
+print("✅ Saved diverse_companies.csv")
+
+# ------------------------------------------------------------
+# BONUS Q6: Decade-by-Decade Analysis
+# ------------------------------------------------------------
+print("\n[Bonus Q6] Patents by Decade...")
+decade_trends = pd.read_sql_query("""
+    SELECT 
+        (year / 10) * 10 as decade,
+        COUNT(*) as patent_count,
+        COUNT(DISTINCT pic.inventor_id) as unique_inventors
+    FROM patents p
+    LEFT JOIN patent_inventor_company pic ON p.patent_id = pic.patent_id
+    WHERE year IS NOT NULL
+    GROUP BY decade
+    ORDER BY decade
+""", conn)
+decade_trends.to_csv(f"{OUTPUT_DIR}/decade_trends.csv", index=False)
+print("✅ Saved decade_trends.csv")
+
+# ------------------------------------------------------------
+# BONUS Q7: Top Inventor-Company Pairings
+# ------------------------------------------------------------
+print("\n[Bonus Q7] Top Inventor-Company Collaborations...")
+collaborations = pd.read_sql_query("""
+    SELECT 
+        i.name as inventor,
+        c.name as company,
+        COUNT(DISTINCT pic.patent_id) as joint_patents
+    FROM patent_inventor_company pic
+    JOIN inventors i ON pic.inventor_id = i.inventor_id
+    JOIN companies c ON pic.company_id = c.company_id
+    WHERE c.name IS NOT NULL AND c.name != ''
+    GROUP BY i.inventor_id, c.company_id
+    ORDER BY joint_patents DESC
+    LIMIT 10
+""", conn)
+collaborations.to_csv(f"{OUTPUT_DIR}/collaborations.csv", index=False)
+print("✅ Saved collaborations.csv")   
 
 # ------------------------------------------------------------
 # Get total counts for console report
@@ -138,6 +197,16 @@ for i, row in top_countries.head(5).iterrows():
 
 print("\n" + "=" * 60)
 
+print("\nDecade Breakdown:")
+for _, row in decade_trends.iterrows():
+    print(f"   {int(row['decade'])}s: {int(row['patent_count']):,} patents ({int(row['unique_inventors']):,} inventors)")
+
+print("\nTop Inventor-Company Duos:")
+for _, row in collaborations.head(3).iterrows():
+    inventor = row['inventor'][:25] if pd.notna(row['inventor']) else "Unknown"
+    company = row['company'][:25] if pd.notna(row['company']) else "Unknown"
+    print(f"   {inventor} + {company}: {row['joint_patents']} patents")
+
 # ------------------------------------------------------------
 # JSON REPORT
 # ------------------------------------------------------------
@@ -160,6 +229,14 @@ json_report = {
         {"country": row['country'] if pd.notna(row['country']) else "Unknown", 
          "patents": int(row['patent_count'])} 
         for _, row in top_countries.head(5).iterrows()
+    ],
+      "decade_trends": [
+        {"decade": f"{int(row['decade'])}s", "patents": int(row['patent_count']), "inventors": int(row['unique_inventors'])} 
+        for _, row in decade_trends.iterrows()
+    ],
+    "top_collaborations": [
+        {"inventor": row['inventor'], "company": row['company'], "patents": int(row['joint_patents'])} 
+        for _, row in collaborations.head(5).iterrows()
     ]
 }
 

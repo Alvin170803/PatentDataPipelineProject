@@ -1,71 +1,104 @@
 {
-  "total_patents": 2217504,
-  "total_inventors": 151930,
-  "total_companies": 26809,
+  "total_patents": 9454161,
+  "total_inventors": 6912911,
+  "total_companies": 572495,
   "top_inventors": [
     {
+      "name": "Shunpei Yamazaki",
+      "patents": 1391
+    },
+    {
+      "name": "Kia Silverbrook",
+      "patents": 911
+    },
+    {
+      "name": "Tao Luo",
+      "patents": 841
+    },
+    {
+      "name": "Junyi Li",
+      "patents": 570
+    },
+    {
       "name": "Jonathan P. Ive",
-      "patents": 1062
-    },
-    {
-      "name": "Richard P. Howarth",
-      "patents": 957
-    },
-    {
-      "name": "Bartley K. Andre",
-      "patents": 945
-    },
-    {
-      "name": "Duncan Robert Kerr",
-      "patents": 939
-    },
-    {
-      "name": "Peter Russell-Clarke",
-      "patents": 931
+      "patents": 554
     }
   ],
   "top_companies": [
     {
-      "name": "NIKE, Inc.",
-      "patents": 2175
-    },
-    {
       "name": "SAMSUNG DISPLAY CO., LTD.",
-      "patents": 1795
+      "patents": 174536
     },
     {
-      "name": "Apple Inc.",
-      "patents": 1502
+      "name": "International Business Machines Corporation",
+      "patents": 164083
     },
     {
-      "name": "LG ELECTRONICS INC.",
-      "patents": 1368
+      "name": "CANON KABUSHIKI KAISHA",
+      "patents": 91331
     },
     {
-      "name": "FORD GLOBAL TECHNOLOGIES, LLC",
-      "patents": 560
+      "name": "SONY GROUP CORPORATION",
+      "patents": 62911
+    },
+    {
+      "name": "Fujitsu Limited",
+      "patents": 56343
     }
   ],
   "top_countries": [
     {
       "country": "US",
-      "patents": 148073
-    },
-    {
-      "country": "CN",
-      "patents": 45689
-    },
-    {
-      "country": "KR",
-      "patents": 11680
+      "patents": 2175748
     },
     {
       "country": "JP",
-      "patents": 10975
+      "patents": 664487
     },
     {
       "country": "DE",
-      "patents": 8071
+      "patents": 284469
+    },
+    {
+      "country": "CN",
+      "patents": 274370
+    },
+    {
+      "country": "KR",
+      "patents": 214246
     }
-  ]
+  ],
+  "decade_trends": [
+    {
+      "decade": "1970s",
+      "patents": 342163,
+      "inventors": 69660
+    },
+    {
+      "decade": "1980s",
+      "patents": 1018481,
+      "inventors": 190246
+    },
+    {
+      "decade": "1990s",
+      "patents": 1721302,
+      "inventors": 329340
+    },
+    {
+      "decade": "2000s",
+      "patents": 2683174,
+      "inventors": 482762
+    },
+    {
+      "decade": "2010s",
+      "patents": 4889841,
+      "inventors": 801913
+    },
+    {
+      "decade": "2020s",
+      "patents": 3568288,
+      "inventors": 656887
+    }
+  ],
+  "top_collaborations": []
 }

@@ -68,7 +68,7 @@ if not top_inventors.empty:
     plt.close()
     print(f"✅ Saved top_inventors.png")
 else:
-    print("⚠️ No inventor data for chart")
+    print("SORRY! No inventor data for chart")
 
 # ------------------------------------------------------------
 # Chart 2: Top 10 Companies (Horizontal Bar Chart)
@@ -110,7 +110,7 @@ if not top_companies.empty:
     plt.close()
     print(f"✅ Saved top_companies.png")
 else:
-    print("⚠️ No company data for chart")
+    print("SORRY! No company data for chart")
 
 # ------------------------------------------------------------
 # Chart 3: Country Distribution (Pie Chart)
@@ -169,7 +169,7 @@ if not top_countries.empty:
     plt.close()
     print(f"✅ Saved country_distribution.png")
 else:
-    print("⚠️ No country data for chart")
+    print("SORRY! No country data for chart")
 
 # ------------------------------------------------------------
 # Chart 4: Patents Per Year (Line Chart)
@@ -181,13 +181,13 @@ SELECT
     year,
     COUNT(*) as patent_count
 FROM patents
-WHERE year IS NOT NULL AND year >= 2020 AND year <= 2025
+WHERE year IS NOT NULL 
 GROUP BY year
 ORDER BY year
 """
 yearly_trends = pd.read_sql_query(q4, conn)
 
-if not yearly_trends.empty:
+if not yearly_trends.empty and len(yearly_trends) > 0:
     fig, ax = plt.subplots(figsize=(10, 6))
     
     # Line with markers
@@ -206,7 +206,7 @@ if not yearly_trends.empty:
     
     ax.set_xlabel('Year', fontsize=12, fontweight='bold')
     ax.set_ylabel('Number of Patents', fontsize=12, fontweight='bold')
-    ax.set_title('Patent Grants by Year (2020-2025)', fontsize=14, fontweight='bold', pad=15)
+    ax.set_title('Patent Grants by Year (1976-2025)', fontsize=14, fontweight='bold', pad=15)
     ax.set_xticks(yearly_trends['year'])
     ax.yaxis.set_major_formatter(ticker.StrMethodFormatter('{x:,.0f}'))
     
@@ -218,7 +218,96 @@ if not yearly_trends.empty:
     plt.close()
     print(f"✅ Saved patents_per_year.png")
 else:
-    print("⚠️ No yearly data for chart")
+    print("SORRY! No yearly data for chart")
+    
+# ------------------------------------------------------------
+# Chart 5: Decade Trends (Bar Chart)
+# ------------------------------------------------------------
+print("\n[5/6] Decade Trends Chart...")
+
+q5 = """
+SELECT 
+    (year / 10) * 10 as decade,
+    COUNT(*) as patent_count
+FROM patents
+WHERE year IS NOT NULL
+GROUP BY decade
+ORDER BY decade
+"""
+decade_data = pd.read_sql_query(q5, conn)
+
+if not decade_data.empty:
+    fig, ax = plt.subplots(figsize=(10, 6))
+    
+    # Convert decade to label like "1970s"
+    decade_data['label'] = decade_data['decade'].astype(int).astype(str) + 's'
+    
+    bars = ax.bar(decade_data['label'], decade_data['patent_count'], 
+                  color=COLORS[:len(decade_data)], edgecolor='white', width=0.6)
+    
+    # Add value labels on top of bars
+    for bar, count in zip(bars, decade_data['patent_count']):
+        ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + max(decade_data['patent_count'])*0.01,
+                f'{count:,}', ha='center', va='bottom', fontsize=10, fontweight='bold')
+    
+    ax.set_xlabel('Decade', fontsize=12, fontweight='bold')
+    ax.set_ylabel('Number of Patents', fontsize=12, fontweight='bold')
+    ax.set_title('Patent Grants by Decade (1976-2025)', fontsize=14, fontweight='bold', pad=15)
+    ax.yaxis.set_major_formatter(ticker.StrMethodFormatter('{x:,.0f}'))
+    
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.savefig(f"{OUTPUT_DIR}/decade_trends.png", dpi=150, bbox_inches='tight')
+    plt.close()
+    print(f"✅ Saved decade_trends.png")
+else:
+    print("SORRY! No decade data for chart")
+
+# ------------------------------------------------------------
+# Chart 6: Top Collaborations (Horizontal Bar Chart)
+# ------------------------------------------------------------
+print("\n[6/6] Top Collaborations Chart...")
+
+q6 = """
+SELECT 
+    i.name as inventor,
+    c.name as company,
+    COUNT(DISTINCT pic.patent_id) as joint_patents
+FROM patent_inventor_company pic
+JOIN inventors i ON pic.inventor_id = i.inventor_id
+JOIN companies c ON pic.company_id = c.company_id
+WHERE c.name IS NOT NULL AND c.name != ''
+GROUP BY i.inventor_id, c.company_id
+ORDER BY joint_patents DESC
+LIMIT 8
+"""
+collaborations = pd.read_sql_query(q6, conn)
+
+if not collaborations.empty and len(collaborations) > 0:
+    fig, ax = plt.subplots(figsize=(12, 6))
+    
+    # Create label combining inventor and company
+    collaborations['label'] = collaborations['inventor'].str[:20] + ' + ' + collaborations['company'].str[:20]
+    collaborations = collaborations.iloc[::-1]  # Reverse for horizontal bar
+    
+    bars = ax.barh(collaborations['label'], collaborations['joint_patents'], 
+                   color=COLORS[3], edgecolor='white', height=0.7)
+    
+    for bar, count in zip(bars, collaborations['joint_patents']):
+        ax.text(bar.get_width() + max(collaborations['joint_patents'])*0.01, 
+                bar.get_y() + bar.get_height()/2,
+                f'{count:,}', va='center', fontsize=9, fontweight='bold')
+    
+    ax.set_xlabel('Joint Patents', fontsize=12, fontweight='bold')
+    ax.set_title('Top Inventor-Company Collaborations', fontsize=14, fontweight='bold', pad=15)
+    ax.xaxis.set_major_formatter(ticker.StrMethodFormatter('{x:,.0f}'))
+    
+    plt.tight_layout()
+    plt.savefig(f"{OUTPUT_DIR}/collaborations.png", dpi=150, bbox_inches='tight')
+    plt.close()
+    print(f"✅ Saved collaborations.png")
+else:
+    print("SORRY! No collaboration data for chart (skipping)")    
 
 # ------------------------------------------------------------
 # Summary
@@ -233,5 +322,7 @@ print("   - top_inventors.png")
 print("   - top_companies.png")
 print("   - country_distribution.png")
 print("   - patents_per_year.png")
+print("   - decade_trends.png")        
+print("   - collaborations.png") 
 print("\n✅ Ready for reports or dashboard!")
 print("=" * 60)
