@@ -1,6 +1,6 @@
 {
   "total_patents": 9454161,
-  "total_inventors": 6912911,
+  "total_inventors": 22477025,
   "total_companies": 572495,
   "top_inventors": [
     {
@@ -71,32 +71,32 @@
   "decade_trends": [
     {
       "decade": "1970s",
-      "patents": 342163,
+      "patents": 554169,
       "inventors": 69660
     },
     {
       "decade": "1980s",
-      "patents": 1018481,
+      "patents": 1648913,
       "inventors": 190246
     },
     {
       "decade": "1990s",
-      "patents": 1721302,
+      "patents": 2764274,
       "inventors": 329340
     },
     {
       "decade": "2000s",
-      "patents": 2683174,
+      "patents": 4353182,
       "inventors": 482762
     },
     {
       "decade": "2010s",
-      "patents": 4889841,
+      "patents": 7932368,
       "inventors": 801913
     },
     {
       "decade": "2020s",
-      "patents": 3568288,
+      "patents": 5719080,
       "inventors": 656887
     }
   ],

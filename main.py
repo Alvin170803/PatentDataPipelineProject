@@ -96,6 +96,7 @@ if __name__ == "__main__":
     # Joins inventor location_ids with g_location_disambiguated.tsv
     run_script("scripts/fix_countries.py", optional=True)
     
+    
     # Step 3: Analyze and generate reports (CSV + JSON + Console)
     run_script("scripts/04_analysis.py")
     
