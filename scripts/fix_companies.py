@@ -5,6 +5,7 @@ conn = sqlite3.connect('patents.db', timeout=30)
 cur = conn.cursor()
 
 print('Loading assignee data from raw file...')
+cur.execute('DROP TABLE IF EXISTS _a')
 cur.execute('CREATE TABLE _a (patent_id TEXT, assignee_id TEXT)')
 
 for chunk in pd.read_csv('data/g_assignee_disambiguated.tsv', sep='\t', chunksize=100000, low_memory=False):

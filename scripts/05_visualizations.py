@@ -174,46 +174,49 @@ else:
 # ------------------------------------------------------------
 # Chart 4: Patents Per Year (Line Chart)
 # ------------------------------------------------------------
-print("\n[4/4] Patents Per Year Chart...")
+print("\n[4/6] Patents Per Year Chart...")
 
 q4 = """
 SELECT 
     year,
     COUNT(*) as patent_count
 FROM patents
-WHERE year IS NOT NULL 
+WHERE year IS NOT NULL
 GROUP BY year
 ORDER BY year
 """
 yearly_trends = pd.read_sql_query(q4, conn)
 
-if not yearly_trends.empty and len(yearly_trends) > 0:
-    fig, ax = plt.subplots(figsize=(10, 6))
+if not yearly_trends.empty:
+    fig, ax = plt.subplots(figsize=(14, 6))  # Wider for all years
     
     # Line with markers
     ax.plot(yearly_trends['year'], yearly_trends['patent_count'], 
-            marker='o', linewidth=3, markersize=12, color=COLORS[0], 
-            markerfacecolor='white', markeredgewidth=2, markeredgecolor=COLORS[0])
+            marker='o', linewidth=2, markersize=5, color=COLORS[0], 
+            markerfacecolor='white', markeredgewidth=1.5, markeredgecolor=COLORS[0])
     
     # Fill area under line
     ax.fill_between(yearly_trends['year'], yearly_trends['patent_count'], 
-                    alpha=0.2, color=COLORS[0])
+                    alpha=0.15, color=COLORS[0])
     
-    # Add value labels
-    for x, y in zip(yearly_trends['year'], yearly_trends['patent_count']):
-        ax.annotate(f'{y:,}', (x, y), textcoords="offset points", 
-                    xytext=(0, 15), ha='center', fontsize=11, fontweight='bold')
+    # Add value labels (every 5th year only to avoid overlap)
+    for i, (x, y) in enumerate(zip(yearly_trends['year'], yearly_trends['patent_count'])):
+        if i % 5 == 0:
+            ax.annotate(f'{y:,}', (x, y), textcoords="offset points", 
+                        xytext=(0, 12), ha='center', fontsize=8, fontweight='bold')
     
     ax.set_xlabel('Year', fontsize=12, fontweight='bold')
     ax.set_ylabel('Number of Patents', fontsize=12, fontweight='bold')
     ax.set_title('Patent Grants by Year (1976-2025)', fontsize=14, fontweight='bold', pad=15)
+    
+    # Set all years as ticks, rotate vertically
     ax.set_xticks(yearly_trends['year'])
+    ax.set_xticklabels(yearly_trends['year'], rotation=90, fontsize=6)
+    
     ax.yaxis.set_major_formatter(ticker.StrMethodFormatter('{x:,.0f}'))
+    ax.grid(True, alpha=0.3, axis='y')
     
-    # Add grid
-    ax.grid(True, alpha=0.3)
-    
-    plt.tight_layout()
+    plt.tight_layout(pad=2.0)
     plt.savefig(f"{OUTPUT_DIR}/patents_per_year.png", dpi=150, bbox_inches='tight')
     plt.close()
     print(f"✅ Saved patents_per_year.png")
